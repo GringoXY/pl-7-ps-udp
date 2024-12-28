@@ -6,16 +6,12 @@ int port = Configs.DefaultBroadcastPort;
 string ipAddress = Configs.DefaultBroadcastIpAddress;
 
 Console.ForegroundColor = ConsoleColor.Gray;
-Console.Write("Podaj adres IP rozgłoszeniowy: ");
+Console.Write($"Podaj adres IP rozgłoszeniowy (domyślnie {ipAddress}): ");
 
-if (IPAddress.TryParse(Console.ReadLine(), out IPAddress? parsedIpAddress) == false)
+if (IPAddress.TryParse(Console.ReadLine(), out IPAddress? parsedIpAddress))
 {
-    Console.ForegroundColor = ConsoleColor.Red;
-    Console.Error.WriteLine("Podany adres IP rozgłoszeniowy jest niepoprawny");
-    return;
+    ipAddress = parsedIpAddress.ToString();
 }
-
-ipAddress = parsedIpAddress.ToString();
 
 Console.Write($"Podaj port (domyślnie {port}): ");
 if (int.TryParse(Console.ReadLine(), out int parsedPort))

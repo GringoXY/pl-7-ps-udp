@@ -1,4 +1,5 @@
-﻿using System.Net;
+﻿using Shared;
+using System.Net;
 using System.Net.Sockets;
 using System.Text;
 
@@ -12,24 +13,21 @@ internal sealed class BroadcastSender(string ipAddress, int port)
 
     public void Start()
     {
-        string message = "Hello! Broadcast message!";
-        byte[] dgram = Encoding.ASCII.GetBytes("Hello! Broadcast message!");
-
-        Console.WriteLine($"Wysyłanie wiadomości: \"{message}\"");
-
-        IPEndPoint remoteIpEndPoint = new(IPAddress.Parse(ipAddress), Port);
+        IPEndPoint remoteIpEndPoint = new(IPAddress.Parse(IpAddress), Port);
 
         // `using` automatically disposes (closes) connection
         using Socket serverSocket = new(
             AddressFamily.InterNetwork,
             SocketType.Dgram,
-            ProtocolType.Udp)
+            ProtocolType.Udp);
+
+        Console.Write($"Wyślij wiadomość (\"{Configs.CloseCommand}\" zamyka serwer): ");
+        string message = string.Empty;
+        while ((message = Console.ReadLine() ?? string.Empty).Length > 0)
         {
-            EnableBroadcast = true,
-        };
-
-        serverSocket.SendTo(dgram, remoteIpEndPoint);
-
-        Console.WriteLine("Wiadomość wysłana...");
+            byte[] dgram = Encoding.ASCII.GetBytes(message);
+            serverSocket.SendTo(dgram, remoteIpEndPoint);
+            Console.Write("Wyślij wiadomość: ");
+        }
     }
 }

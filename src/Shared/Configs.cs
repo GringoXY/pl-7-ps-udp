@@ -7,4 +7,5 @@ public static class Configs
 {
     public const string DefaultBroadcastIpAddress = "192.168.0.255";
     public const int DefaultBroadcastPort = 5000;
+    public const string CloseCommand = "exit";
 }
