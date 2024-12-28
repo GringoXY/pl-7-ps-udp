@@ -1,35 +1,44 @@
-﻿using Shared;
+﻿using System.Net.Sockets;
 using System.Net;
-using System.Net.Sockets;
 using System.Text;
 
-namespace BroadcastSenderProgram;
+namespace MulticastListenerProgram;
 
-// https://learn.microsoft.com/en-us/answers/questions/562659/(solved)-how-can-send-a-udp-broadcast-to-any-ip-ad
-internal sealed class BroadcastSender(string ipAddress, int port)
+internal sealed class MulticastListener(string ipAddress, int port)
 {
     public string IpAddress => ipAddress;
     public int Port => port;
 
     public void Start()
     {
-        IPEndPoint remoteIpEndPoint = new(IPAddress.Parse(IpAddress), Port);
         try
         {
             // `using` automatically disposes (closes) connection
-            using Socket serverSocket = new(
-                AddressFamily.InterNetwork,
-                SocketType.Dgram,
-                ProtocolType.Udp);
-
-            Console.Write($"Wyślij wiadomość (\"{Configs.CloseCommand}\" zamyka serwer): ");
-            string message = string.Empty;
-            while ((message = Console.ReadLine() ?? string.Empty).Length > 0 && !message.Equals(Configs.CloseCommand, StringComparison.CurrentCultureIgnoreCase))
+            using UdpClient udpClient = new()
             {
-                byte[] dgram = Encoding.ASCII.GetBytes(message);
-                serverSocket.SendTo(dgram, remoteIpEndPoint);
-                Console.Write("Wyślij wiadomość: ");
-            }
+                // Based on docs: https://learn.microsoft.com/en-us/dotnet/api/system.net.sockets.socket.exclusiveaddressuse?view=net-8.0
+                // "Gets or sets a value that indicates whether the Socket allows only one process to bind to a port."
+                ExclusiveAddressUse = false,
+            };
+
+            udpClient.Client.SetSocketOption(
+                SocketOptionLevel.Socket,
+                SocketOptionName.ReuseAddress,
+                true);
+
+            IPEndPoint localEndPoint = new(IPAddress.Any, Port);
+            udpClient.Client.Bind(localEndPoint);
+
+            IPAddress multicastIpAddress = IPAddress.Parse(ipAddress);
+            udpClient.JoinMulticastGroup(multicastIpAddress);
+
+            string receiveMessage = string.Empty;
+            do
+            {
+                byte[] receiveBytes = udpClient.Receive(ref localEndPoint);
+                receiveMessage = Encoding.ASCII.GetString(receiveBytes);
+                Console.WriteLine(receiveMessage);
+            } while (receiveMessage != string.Empty);
         }
         catch (ObjectDisposedException ode)
         {

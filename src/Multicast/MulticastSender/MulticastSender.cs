@@ -3,31 +3,30 @@ using System.Net;
 using System.Net.Sockets;
 using System.Text;
 
-namespace BroadcastSenderProgram;
+namespace MulticastSenderProgram;
 
-// https://learn.microsoft.com/en-us/answers/questions/562659/(solved)-how-can-send-a-udp-broadcast-to-any-ip-ad
-internal sealed class BroadcastSender(string ipAddress, int port)
+// https://learn.microsoft.com/en-us/dotnet/api/system.net.sockets.udpclient.joinmulticastgroup?view=net-8.0
+internal sealed class MulticastSender(string ipAddress, int port)
 {
     public string IpAddress => ipAddress;
     public int Port => port;
-
     public void Start()
     {
-        IPEndPoint remoteIpEndPoint = new(IPAddress.Parse(IpAddress), Port);
         try
         {
+            IPAddress multicastIpAddress = IPAddress.Parse(IpAddress);
+            IPEndPoint remoteIpEndPoint = new(multicastIpAddress, Port);
+
             // `using` automatically disposes (closes) connection
-            using Socket serverSocket = new(
-                AddressFamily.InterNetwork,
-                SocketType.Dgram,
-                ProtocolType.Udp);
+            using UdpClient udpClient = new();
+            udpClient.JoinMulticastGroup(multicastIpAddress);
 
             Console.Write($"Wyślij wiadomość (\"{Configs.CloseCommand}\" zamyka serwer): ");
             string message = string.Empty;
-            while ((message = Console.ReadLine() ?? string.Empty).Length > 0 && !message.Equals(Configs.CloseCommand, StringComparison.CurrentCultureIgnoreCase))
+            while ((message = Console.ReadLine() ?? string.Empty).Length > 0 && message.Equals(Configs.CloseCommand, StringComparison.CurrentCultureIgnoreCase) == false)
             {
                 byte[] dgram = Encoding.ASCII.GetBytes(message);
-                serverSocket.SendTo(dgram, remoteIpEndPoint);
+                udpClient.Send(dgram, dgram.Length, remoteIpEndPoint);
                 Console.Write("Wyślij wiadomość: ");
             }
         }
