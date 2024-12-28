@@ -14,20 +14,49 @@ internal sealed class BroadcastSender(string ipAddress, int port)
     public void Start()
     {
         IPEndPoint remoteIpEndPoint = new(IPAddress.Parse(IpAddress), Port);
-
-        // `using` automatically disposes (closes) connection
-        using Socket serverSocket = new(
-            AddressFamily.InterNetwork,
-            SocketType.Dgram,
-            ProtocolType.Udp);
-
-        Console.Write($"Wyślij wiadomość (\"{Configs.CloseCommand}\" zamyka serwer): ");
-        string message = string.Empty;
-        while ((message = Console.ReadLine() ?? string.Empty).Length > 0)
+        try
         {
-            byte[] dgram = Encoding.ASCII.GetBytes(message);
-            serverSocket.SendTo(dgram, remoteIpEndPoint);
-            Console.Write("Wyślij wiadomość: ");
+            // `using` automatically disposes (closes) connection
+            using Socket serverSocket = new(
+                AddressFamily.InterNetwork,
+                SocketType.Dgram,
+                ProtocolType.Udp);
+
+            Console.Write($"Wyślij wiadomość (\"{Configs.CloseCommand}\" zamyka serwer): ");
+            string message = string.Empty;
+            while ((message = Console.ReadLine() ?? string.Empty).Length > 0 && message.ToLower() != Configs.CloseCommand   )
+            {
+                byte[] dgram = Encoding.ASCII.GetBytes(message);
+                serverSocket.SendTo(dgram, remoteIpEndPoint);
+                Console.Write("Wyślij wiadomość: ");
+            }
+        }
+        catch (ObjectDisposedException ode)
+        {
+            Console.ForegroundColor = ConsoleColor.Red;
+            Console.WriteLine($"Błąd serwera: {ode.Message}");
+            if (ode.InnerException is not null)
+            {
+                Console.WriteLine($"Wyjątek wewnętrzny: {ode.InnerException?.Message}");
+            }
+        }
+        catch (SocketException se)
+        {
+            Console.ForegroundColor = ConsoleColor.Red;
+            Console.WriteLine($"Błąd gniazda: {se.Message}");
+            if (se.InnerException is not null)
+            {
+                Console.WriteLine($"Wyjątek wewnętrzny: {se.InnerException?.Message}");
+            }
+        }
+        catch (Exception e)
+        {
+            Console.ForegroundColor = ConsoleColor.Red;
+            Console.WriteLine($"Błąd: {e.Message}");
+            if (e.InnerException is not null)
+            {
+                Console.WriteLine($"Wyjątek wewnętrzny: {e.InnerException?.Message}");
+            }
         }
     }
 }
