@@ -10,17 +10,17 @@ Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "Solution Items", "Solution 
 EndProject
 Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "Broadcast", "Broadcast", "{FAF79F7B-E774-454E-A365-5927DE75FDBD}"
 EndProject
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "BroadcastSender", "Broadcast\BroadcastSender\BroadcastSender.csproj", "{0BC534E5-B78A-4D51-A4C1-47F28D8ED25B}"
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "BroadcastSender", "Broadcast\BroadcastSender\BroadcastSender.csproj", "{0BC534E5-B78A-4D51-A4C1-47F28D8ED25B}"
 EndProject
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "BroadcastListener", "Broadcast\BroadcastListener\BroadcastListener.csproj", "{D92F0945-D35B-47BD-8EF4-1E82EB0BFABA}"
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "BroadcastListener", "Broadcast\BroadcastListener\BroadcastListener.csproj", "{D92F0945-D35B-47BD-8EF4-1E82EB0BFABA}"
 EndProject
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Shared", "Shared\Shared.csproj", "{20F5FB2D-0728-46EF-BC35-9EAAEE6C39D9}"
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "Shared", "Shared\Shared.csproj", "{20F5FB2D-0728-46EF-BC35-9EAAEE6C39D9}"
 EndProject
 Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "Multicast", "Multicast", "{5514A598-ADF2-4574-AA75-BE36E93813CC}"
 EndProject
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "MulticastSender", "Multicast\MulticastSender\MulticastSender.csproj", "{5C6A22BD-D3E3-448F-B479-32F91E9E1C28}"
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "MulticastSender", "Multicast\MulticastSender\MulticastSender.csproj", "{5C6A22BD-D3E3-448F-B479-32F91E9E1C28}"
 EndProject
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "MulticastListener", "Multicast\MulticastListener\MulticastListener.csproj", "{43F59AB9-09D3-4591-A1FA-270D53871EDB}"
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "MulticastListener", "Multicast\MulticastListener\MulticastListener.csproj", "{43F59AB9-09D3-4591-A1FA-270D53871EDB}"
 EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
