@@ -20,3 +20,14 @@ dotnet run --project src\Broadcast\BroadcastSender
 ```terminal
 dotnet run --project src\Broadcast\BroadcastListener
 ```
+
+### UDP Multicast
+#### Run server
+```terminal
+dotnet run --project src\Multicast\MulticastSender
+```
+
+#### Run client
+```terminal
+dotnet run --project src\Multicast\MulticastListener
+```
